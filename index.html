@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Workflow Casita Solosé</title>
+<meta name="description" content="Tablero interno de la colaboración Mario × Fer Piña — app del torneo Casita Solosé.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#F6EFE2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Workflow Solosé">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Work+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- ============ 1. Configuración pendiente ============ -->
+<div class="pantalla" id="vista-config" hidden>
+  <div class="tarjeta">
+    <div class="escudo-g">CS</div>
+    <h1>Falta conectar<br>Supabase</h1>
+    <p class="lead">Pega la URL y la <em>anon key</em> de tu proyecto de Supabase. Se guardan en este
+      navegador; para dejarlas fijas, edita <code>config.js</code> antes de desplegar.</p>
+    <form id="form-config">
+      <label for="cfg-url">Project URL</label>
+      <input id="cfg-url" type="url" placeholder="https://xxxxxxxx.supabase.co" required>
+      <label for="cfg-key">Anon public key</label>
+      <input id="cfg-key" type="text" placeholder="eyJhbGciOi..." required>
+      <button class="btn-full" type="submit">Guardar y continuar</button>
+    </form>
+    <div class="aviso" id="cfg-aviso" hidden></div>
+    <p class="pie">Casita Solosé · Condesa, CDMX</p>
+  </div>
+</div>
+
+<!-- ============ 2. Login ============ -->
+<div class="pantalla" id="vista-login" hidden>
+  <div class="tarjeta">
+    <div class="escudo-g">CS</div>
+    <h1>Workflow<br>Casita Solosé</h1>
+    <p class="lead">Tablero privado de Mario y Fer. Te llega un link por correo, sin contraseña.</p>
+    <form id="form-login">
+      <label for="login-email">Tu correo</label>
+      <input id="login-email" type="email" inputmode="email" autocomplete="email"
+             placeholder="tucorreo@gmail.com" required>
+      <button class="btn-full" type="submit" id="btn-login">Enviarme el link</button>
+    </form>
+    <div class="aviso" id="login-aviso" hidden></div>
+    <p class="pie">Acceso restringido</p>
+  </div>
+</div>
+
+<!-- ============ 3. Tablero ============ -->
+<div id="vista-app" hidden>
+  <header class="top">
+    <div class="top-fila">
+      <div class="marca">
+        <span class="escudo">CS</span>
+        <h1>Workflow Solosé</h1>
+        <span class="sub" id="quien-soy"></span>
+      </div>
+      <button class="icono-btn" id="btn-ajustes" title="Accesos" aria-label="Accesos">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <button class="icono-btn" id="btn-salir" title="Salir" aria-label="Salir">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+      </button>
+    </div>
+    <nav class="nav" id="nav"></nav>
+  </header>
+
+  <main id="secciones"></main>
+</div>
+
+<!-- ============ 4. Panel de accesos ============ -->
+<div class="velo" id="velo-ajustes" hidden>
+  <div class="hoja">
+    <h2>Quién puede entrar</h2>
+    <p class="lead">Solo estos correos pueden pedir el link de acceso. Cualquier otro es rechazado
+      antes de crear la cuenta.</p>
+    <ul class="correos" id="lista-correos"></ul>
+    <div class="fila-add">
+      <input id="nuevo-correo" type="email" inputmode="email" placeholder="correo@dominio.com">
+      <input id="nuevo-nombre" class="corto" type="text" placeholder="Nombre">
+      <button class="btn-add" id="btn-add-correo">Agregar</button>
+    </div>
+    <div class="aviso" id="ajustes-aviso" hidden></div>
+    <div style="display:flex;gap:.4rem;margin-top:1rem">
+      <button class="btn-sm" id="btn-reconfig">Cambiar credenciales de Supabase</button>
+      <button class="btn-sm primario" id="btn-cerrar-ajustes" style="margin-left:auto">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script src="./config.js"></script>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
