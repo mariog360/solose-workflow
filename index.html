@@ -6,7 +6,7 @@
 <title>Workflow Casita Solosé</title>
 <meta name="description" content="Tablero interno de la colaboración Mario × Fer Piña — app del torneo Casita Solosé.">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#F6EFE2">
+<meta name="theme-color" content="#F4EDE0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Workflow Solosé">
@@ -20,26 +20,26 @@
 </head>
 <body>
 
-<!-- ============ 1. Configuración pendiente ============ -->
+<!-- 1. Configuración -->
 <div class="pantalla" id="vista-config" hidden>
   <div class="tarjeta">
     <div class="escudo-g">CS</div>
-    <h1>Falta conectar<br>Supabase</h1>
-    <p class="lead">Pega la URL y la <em>anon key</em> de tu proyecto de Supabase. Se guardan en este
-      navegador; para dejarlas fijas, edita <code>config.js</code> antes de desplegar.</p>
+    <h1>Falta conectar Supabase</h1>
+    <p class="lead">Pega la URL y la <em>anon key</em> de tu proyecto. Se guardan en este navegador;
+      para dejarlas fijas, edita <code>config.js</code> antes de desplegar.</p>
     <form id="form-config">
       <label for="cfg-url">Project URL</label>
       <input id="cfg-url" type="url" placeholder="https://xxxxxxxx.supabase.co" required>
       <label for="cfg-key">Anon public key</label>
       <input id="cfg-key" type="text" placeholder="eyJhbGciOi..." required>
-      <button class="btn-full" type="submit">Guardar y continuar</button>
+      <button class="b-full" type="submit">Guardar y continuar</button>
     </form>
-    <div class="aviso" id="cfg-aviso" hidden></div>
-    <p class="pie">Casita Solosé · Condesa, CDMX</p>
+    <div class="msj" id="cfg-msj" hidden></div>
+    <p class="firma">Casita Solosé · Condesa</p>
   </div>
 </div>
 
-<!-- ============ 2. Login ============ -->
+<!-- 2. Acceso -->
 <div class="pantalla" id="vista-login" hidden>
   <div class="tarjeta">
     <div class="escudo-g">CS</div>
@@ -49,51 +49,56 @@
       <label for="login-email">Tu correo</label>
       <input id="login-email" type="email" inputmode="email" autocomplete="email"
              placeholder="tucorreo@gmail.com" required>
-      <button class="btn-full" type="submit" id="btn-login">Enviarme el link</button>
+      <button class="b-full" type="submit" id="btn-login">Enviarme el link</button>
     </form>
-    <div class="aviso" id="login-aviso" hidden></div>
-    <p class="pie">Acceso restringido</p>
+    <div class="msj" id="login-msj" hidden></div>
+    <p class="firma">Acceso restringido</p>
   </div>
 </div>
 
-<!-- ============ 3. Tablero ============ -->
+<!-- 3. Tablero -->
 <div id="vista-app" hidden>
   <header class="top">
     <div class="top-fila">
       <div class="marca">
         <span class="escudo">CS</span>
         <h1>Workflow Solosé</h1>
-        <span class="sub" id="quien-soy"></span>
+        <span class="yo" id="quien-soy"></span>
       </div>
-      <button class="icono-btn" id="btn-ajustes" title="Accesos" aria-label="Accesos">
+      <button class="ico" id="btn-ajustes" title="Accesos" aria-label="Accesos">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
-      <button class="icono-btn" id="btn-salir" title="Salir" aria-label="Salir">
+      <button class="ico" id="btn-salir" title="Salir" aria-label="Salir">
         <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
       </button>
     </div>
     <nav class="nav" id="nav"></nav>
   </header>
 
-  <main id="secciones"></main>
+  <main>
+    <div class="col" id="col-a"></div>
+    <div class="col" id="col-b"></div>
+  </main>
 </div>
 
-<!-- ============ 4. Panel de accesos ============ -->
+<!-- 4. Accesos -->
 <div class="velo" id="velo-ajustes" hidden>
   <div class="hoja">
     <h2>Quién puede entrar</h2>
-    <p class="lead">Solo estos correos pueden pedir el link de acceso. Cualquier otro es rechazado
-      antes de crear la cuenta.</p>
+    <p class="lead">Solo estos correos pueden pedir el link. Cualquier otro es rechazado antes de
+      crear la cuenta.</p>
     <ul class="correos" id="lista-correos"></ul>
-    <div class="fila-add">
-      <input id="nuevo-correo" type="email" inputmode="email" placeholder="correo@dominio.com">
-      <input id="nuevo-nombre" class="corto" type="text" placeholder="Nombre">
-      <button class="btn-add" id="btn-add-correo">Agregar</button>
+    <div class="fila">
+      <input id="nuevo-correo" type="email" inputmode="email" placeholder="correo@dominio.com"
+             style="flex:1 1 160px;min-width:0;background:var(--papel);border:1px solid var(--linea);border-radius:7px;padding:.4rem .5rem;font-size:.85rem">
+      <input id="nuevo-nombre" type="text" placeholder="Nombre"
+             style="flex:0 1 100px;min-width:0;background:var(--papel);border:1px solid var(--linea);border-radius:7px;padding:.4rem .5rem;font-size:.85rem">
+      <button class="b pri" id="btn-add-correo">Agregar</button>
     </div>
-    <div class="aviso" id="ajustes-aviso" hidden></div>
-    <div style="display:flex;gap:.4rem;margin-top:1rem">
-      <button class="btn-sm" id="btn-reconfig">Cambiar credenciales de Supabase</button>
-      <button class="btn-sm primario" id="btn-cerrar-ajustes" style="margin-left:auto">Cerrar</button>
+    <div class="msj" id="ajustes-msj" hidden></div>
+    <div class="fila" style="margin-top:1.1rem">
+      <button class="b" id="btn-reconfig">Cambiar credenciales</button>
+      <button class="b pri der" id="btn-cerrar-ajustes">Cerrar</button>
     </div>
   </div>
 </div>

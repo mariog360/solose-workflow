@@ -108,14 +108,32 @@ volver a pedir el link cada vez.
 
 ---
 
+## Las seis secciones
+
+**Acuerdos** no son tareas: son el registro de lo que quedó comprometido entre los dos, con la
+fecha en que se acordó. No se completan ni tienen responsable — se consultan. Por eso no llevan
+casilla, sino un sello de fecha a la izquierda.
+
+**To-do's** son acciones con dueño y con final. Un acuerdo suele *generar* to-do's, pero el
+acuerdo sigue vigente después de que el to-do se completó.
+
+Las otras cuatro: **En curso** (lo que ya empezó), **Completadas** (historial), **Notas** (lo
+investigado o decidido) y **Largo plazo** (ideas para la v2).
+
 ## Uso diario
 
-- **Agregar**: escribe en la caja de cada sección y Enter (Shift+Enter para salto de línea).
-- **Completar**: un clic en la casilla. La tarea se va a *Completadas*.
-- **Reabrir**: un clic en la palomita verde. Regresa a la sección de donde salió.
+- **Agregar**: `+ Nuevo…` al final de cada sección. Enter guarda, Shift+Enter hace salto de
+  línea, Esc cancela.
+- **Flujo de una tarea**: un to-do puede irse directo a *Completadas* con la casilla, o pasar
+  antes a *En curso* con la flecha `→` si va a tomar varios días.
+- **Avances**: en cualquier to-do o tarea en curso, toca `+ avance` para anotar en qué va, sin
+  tener que editar el texto de la tarea. Quedan con fecha y autor, y siguen ahí cuando la tarea
+  se completa. Cada quien borra los suyos.
+- **Reabrir**: un clic en la casilla marcada. Regresa a la sección de donde salió.
 - **Editar / borrar**: los iconos a la derecha. El borrado pide confirmación en dos toques.
 - **Promover una idea de largo plazo**: la flecha `→` la pasa a *En curso*.
 - **Colapsar secciones**: toca el título. *Completadas* arranca cerrada.
+- **Índice de arriba**: salta a cualquier sección y marca en cuál vas.
 - Lo que agrega uno le aparece al otro **sin recargar**.
 
 ## Cambiar o agregar correos
@@ -139,6 +157,7 @@ Icono de engrane (arriba a la derecha) → **Quién puede entrar**.
 | El link del correo abre y regresa al login | La URL de Vercel no está en **Redirect URLs** de Supabase. |
 | Entra pero dice *"Sin acceso"* | Falta correr `supabase/schema.sql`, o se corrió a medias. Vuelve a correrlo completo. |
 | No llega el correo | Límite del SMTP de prueba de Supabase. Espera ~1 h o conecta SMTP propio. |
+| *"Falta una tabla"* al entrar | Es la bitácora de avances. Vuelve a correr `supabase/schema.sql` completo. |
 | Cambié el código y el móvil sigue viejo | El service worker cachea. Cierra la app de la pantalla de inicio y vuelve a abrirla, o sube el número de versión en `sw.js` (`solose-workflow-v1` → `v2`). |
 
 ---
@@ -156,5 +175,6 @@ workflow-casita-solose/
 ├─ vercel.json             headers y no-index
 ├─ icons/                  iconos de la app
 ├─ supabase/schema.sql     tablas + RLS + candado de registro + realtime
+│                         (idempotente: se puede volver a correr sin romper nada)
 └─ DECISIONES-TECNICAS.md  lo reutilizable para la app del torneo
 ```

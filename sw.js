@@ -1,6 +1,6 @@
 /* Service worker mínimo: cachea el shell para que abra rápido y offline muestre algo.
    Nunca cachea llamadas a Supabase — los datos siempre van a la red. */
-const CACHE = 'solose-workflow-v1';
+const CACHE = 'solose-workflow-v3';
 const SHELL = [
   './', './index.html', './styles.css', './app.js', './config.js',
   './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'
