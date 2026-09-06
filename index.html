@@ -44,7 +44,8 @@
   <div class="tarjeta">
     <div class="escudo-g">CS</div>
     <h1>Workflow<br>Casita Solosé</h1>
-    <p class="lead">Tablero privado de Mario y Fer. Te llega un link por correo, sin contraseña.</p>
+    <p class="lead">Tablero privado de Mario y Fer. Te llega un correo con un link y un
+      código de 6 dígitos. Sin contraseña.</p>
     <form id="form-login">
       <label for="login-email">Tu correo</label>
       <input id="login-email" type="email" inputmode="email" autocomplete="email"
@@ -52,6 +53,16 @@
       <button class="b-full" type="submit" id="btn-login">Enviarme el link</button>
     </form>
     <div class="msj" id="login-msj" hidden></div>
+
+    <form id="form-codigo" hidden style="margin-top:1.1rem">
+      <label for="login-codigo">Código de 6 dígitos</label>
+      <input id="login-codigo" type="text" inputmode="numeric" autocomplete="one-time-code"
+             maxlength="6" placeholder="123456"
+             style="font-family:var(--mono);letter-spacing:.35em;font-size:1.1rem">
+      <button class="b-full" type="submit" id="btn-codigo">Entrar con el código</button>
+    </form>
+
+    <button class="enlace" id="toggle-codigo">Ya tengo un código</button>
     <p class="firma">Acceso restringido</p>
   </div>
 </div>

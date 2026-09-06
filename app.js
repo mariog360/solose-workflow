@@ -179,7 +179,47 @@ function pantallaLogin () {
       return;
     }
     localStorage.setItem('solose.email', email);
-    msj(n, 'Listo. Revisa tu correo y abre el link desde este mismo teléfono o compu. Caduca en 1 hora.', 'ok');
+    msj(n, 'Listo. El correo trae un link y un código de 6 dígitos: usa el que te quede mejor. ' +
+           'Caduca en 1 hora.', 'ok');
+    mostrarCodigo(true);
+    $('#login-codigo').focus();
+  };
+
+  /* ---- entrar con código ----
+     El link no siempre sirve: en iPhone, una app agregada a la pantalla de
+     inicio puede no recibir la sesión que el link abre en Safari. El código
+     se teclea dentro de la app y evita ese callejón. */
+  const toggle = $('#toggle-codigo');
+  const fCod = $('#form-codigo');
+  const bCod = $('#btn-codigo');
+
+  const mostrarCodigo = (ver) => {
+    fCod.hidden = !ver;
+    toggle.textContent = ver ? 'Prefiero el link del correo' : 'Ya tengo un código';
+  };
+  mostrarCodigo(false);
+  toggle.onclick = () => mostrarCodigo(fCod.hidden);
+
+  fCod.onsubmit = async (e) => {
+    e.preventDefault();
+    const email = $('#login-email').value.trim().toLowerCase();
+    const token = $('#login-codigo').value.replace(/\D/g, '');
+    if (!email) { msj(n, 'Escribe primero tu correo, arriba.', 'error'); return; }
+    if (token.length !== 6) { msj(n, 'El código son 6 dígitos.', 'error'); return; }
+
+    bCod.disabled = true; bCod.textContent = 'Verificando…';
+    const { error } = await sb.auth.verifyOtp({ email, token, type: 'email' });
+    bCod.disabled = false; bCod.textContent = 'Entrar con el código';
+
+    if (error) {
+      const m = (error.message || '').toLowerCase();
+      msj(n, (m.includes('expired') || m.includes('invalid'))
+        ? 'Ese código no sirve o ya caducó. Pide uno nuevo con el botón de arriba.'
+        : error.message, 'error');
+      return;
+    }
+    localStorage.setItem('solose.email', email);
+    // el evento SIGNED_IN se encarga de entrar al tablero
   };
 }
 
