@@ -285,3 +285,50 @@ li.it:hover .acc,.acc:focus-within{opacity:1}
 }
 .correos .quien{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .correos .quien span{font-family:var(--mono);font-size:.72rem;color:var(--tinta-2)}
+
+/* =============== agrupado por responsable =============== */
+/* --per lo pone el JS por persona; si falta, cae al acento de la sección. */
+li.grupo{display:flex;align-items:center;gap:.5rem;padding:.9rem 0 .35rem;border:0}
+li.grupo:first-child{padding-top:.35rem}
+li.grupo::before{
+  content:'';width:8px;height:8px;border-radius:2px;flex:none;
+  background:var(--per,var(--ac));
+}
+.grupo .quien{
+  font-family:var(--mono);font-size:.67rem;text-transform:uppercase;letter-spacing:.11em;
+  color:var(--per,var(--ac));white-space:nowrap;flex:none;
+}
+.grupo.mio .quien{font-weight:500}
+.grupo .cuenta{
+  font-family:var(--mono);font-size:.64rem;flex:none;order:3;
+  color:var(--per,var(--tinta-3));opacity:.75;
+}
+.grupo::after{
+  content:'';flex:1;height:1px;order:2;
+  background:color-mix(in srgb,var(--per,var(--ac)) 30%,transparent);
+}
+
+/* filas dentro de un grupo: barra del color de su responsable */
+li.it.per{
+  border-left:3px solid color-mix(in srgb,var(--per) 65%,transparent);
+  padding-left:.6rem;
+}
+li.it.per:hover{
+  background:linear-gradient(90deg,color-mix(in srgb,var(--per) 8%,transparent),transparent 72%);
+}
+li.it.per .box{border-color:color-mix(in srgb,var(--per) 50%,var(--linea))}
+li.it.per .box:hover{border-color:var(--per)}
+li.it.per.ok .box{background:var(--per);border-color:var(--per)}
+li.it.per .et.bit:hover{color:var(--per);border-bottom-color:var(--per)}
+li.it.per .bitacora{border-left-color:color-mix(in srgb,var(--per) 35%,transparent)}
+
+/* de qué sección salió una completada */
+.et.origen{
+  color:var(--tinta-2);border:1px solid var(--linea);border-radius:3px;
+  padding:.03rem .3rem;
+}
+
+@media (max-width:480px){
+  .sello{width:52px;font-size:.64rem}
+  li.it{gap:.5rem}
+}

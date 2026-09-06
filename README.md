@@ -110,9 +110,10 @@ volver a pedir el link cada vez.
 
 ## Las seis secciones
 
-**Acuerdos** no son tareas: son el registro de lo que quedó comprometido entre los dos, con la
-fecha en que se acordó. No se completan ni tienen responsable — se consultan. Por eso no llevan
-casilla, sino un sello de fecha a la izquierda.
+**Acuerdos** son el registro de lo que quedó comprometido entre los dos, con la fecha en que se
+acordó. Llevan sello de fecha a la izquierda en vez de responsable. Se pueden marcar como
+completados cuando ya se cumplieron o dejaron de aplicar, y la casilla los regresa a Acuerdos
+si te arrepientes: el registro no se pierde.
 
 **To-do's** son acciones con dueño y con final. Un acuerdo suele *generar* to-do's, pero el
 acuerdo sigue vigente después de que el to-do se completó.
@@ -126,6 +127,14 @@ investigado o decidido) y **Largo plazo** (ideas para la v2).
   línea, Esc cancela.
 - **Flujo de una tarea**: un to-do puede irse directo a *Completadas* con la casilla, o pasar
   antes a *En curso* con la flecha `→` si va a tomar varios días.
+- **Responsables**: *To-do's* y *En curso* van agrupados por responsable, con **lo tuyo hasta
+  arriba**. Cada quien tiene su color — Mario azul, Fer terracota, *Los dos* verde, *Sin
+  asignar* gris — y ese color pinta el encabezado del grupo, la barra lateral de cada renglón y
+  su casilla. Los colores son fijos por posición en la lista de accesos, así que no se mueven
+  aunque agregues gente.
+- **Completar**: todo se puede marcar como completado — acuerdos, to-do's, tareas en curso,
+  notas e ideas de largo plazo. En *Completadas* cada renglón lleva una etiqueta que dice de
+  dónde salió, y la casilla lo regresa exactamente ahí.
 - **Avances**: en cualquier to-do o tarea en curso, toca `+ avance` para anotar en qué va, sin
   tener que editar el texto de la tarea. Quedan con fecha y autor, y siguen ahí cuando la tarea
   se completa. Cada quien borra los suyos.

@@ -24,16 +24,17 @@ function leerConfig () {
    --------------------------------------------------------------------- */
 const SECCIONES = [
   { id:'acuerdo', col:'a', titulo:'Acuerdos', nav:'Acuerdos', tipo:'acuerdo', fecha:true,
+    completable:true,
     desc:'Lo que quedó comprometido entre los dos, con la fecha en que se acordó. No se completan: son el registro.',
     ph:'Nuevo acuerdo…' },
 
   { id:'todo', col:'a', titulo:"To-do's", nav:"To-do's", tipo:'tarea',
-    responsable:true, completable:true, aEnCurso:true, bitacora:true,
+    responsable:true, completable:true, aEnCurso:true, bitacora:true, agrupa:true,
     desc:'Pendientes con responsable, todavía sin empezar.',
     ph:'Nuevo to-do…' },
 
   { id:'en_curso', col:'a', titulo:'En curso', nav:'En curso', tipo:'tarea',
-    responsable:true, completable:true, bitacora:true,
+    responsable:true, completable:true, bitacora:true, agrupa:true,
     desc:'Lo que ya está en marcha. Anota avances para saber en qué va.',
     ph:'Nueva tarea en curso…' },
 
@@ -41,12 +42,12 @@ const SECCIONES = [
     completable:true, bitacora:true, plegada:true, sinAlta:true,
     desc:'Historial. La casilla la regresa a donde estaba.' },
 
-  { id:'nota', col:'b', titulo:'Notas', nav:'Notas', tipo:'nota',
+  { id:'nota', col:'b', titulo:'Notas', nav:'Notas', tipo:'nota', completable:true,
     desc:'Lo que ya investigamos o decidimos, para no perderlo.',
     ph:'Nueva nota…' },
 
   { id:'largo_plazo', col:'b', titulo:'Largo plazo', nav:'Largo plazo', tipo:'nota',
-    promovible:true,
+    promovible:true, completable:true,
     desc:'Ideas y features para la v2 o después. La flecha las manda a En curso.',
     ph:'Idea para más adelante…' }
 ];
@@ -62,6 +63,7 @@ const abiertos = new Set();   // items con la bitácora desplegada
 const $ = (s, r = document) => r.querySelector(s);
 const el = (t, c, txt) => { const n = document.createElement(t); if (c) n.className = c; if (txt != null) n.textContent = txt; return n; };
 const hoyISO = () => new Date().toISOString().slice(0, 10);
+const ORIGEN = { acuerdo:'Acuerdo', todo:"To-do", en_curso:'En curso', nota:'Nota', largo_plazo:'Largo plazo' };
 const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 
 function nombreDe (email) {
@@ -323,12 +325,65 @@ function pintar () {
 
     const ul = document.querySelector(`[data-lista="${s.id}"]`);
     ul.innerHTML = '';
-    lista.forEach(it => ul.appendChild(fila(it, s)));
+    if (s.agrupa && lista.length) pintarAgrupado(ul, lista, s);
+    else lista.forEach(it => ul.appendChild(fila(it, s)));
 
     const zona = document.querySelector(`[data-alta="${s.id}"]`);
     zona.innerHTML = '';
     if (!s.sinAlta) zona.appendChild(altaAbierta === s.id ? formAlta(s) : botonNuevo(s));
     else if (!lista.length) zona.appendChild(el('p', 'vacio', 'Todavía nada terminado.'));
+  });
+}
+
+/* Color por responsable. Fijo por posición en la lista de accesos, así que
+   Mario siempre es el mismo azul y Fer el mismo terracota aunque se agregue
+   gente después. 'Los dos' y 'Sin asignar' tienen los suyos aparte. */
+const PALETA_PERSONA = ['#1B3FD1','#A63D2A','#8A6A12','#6B3A6E','#0F6E68'];
+const COLOR_AMBOS = '#1F7A4C';
+const COLOR_NADIE = '#8B8073';
+
+function colorPersona (nombre) {
+  if (nombre === 'Los dos') return COLOR_AMBOS;
+  if (nombre === 'Sin asignar') return COLOR_NADIE;
+  const i = permitidos.findIndex(p => (p.label || p.email.split('@')[0]) === nombre);
+  if (i >= 0) return PALETA_PERSONA[i % PALETA_PERSONA.length];
+  let h = 0;                                   // responsable escrito a mano
+  for (const c of nombre) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return PALETA_PERSONA[h % PALETA_PERSONA.length];
+}
+
+/* Agrupa por responsable. Lo tuyo primero: la pregunta que uno le hace al
+   tablero es "¿qué me toca a mí?", no "¿qué hay?". */
+function pintarAgrupado (ul, lista, s) {
+  const yo = nombreDe((sesion.user.email || '').toLowerCase());
+  const SIN = 'Sin asignar';
+
+  const grupos = new Map();
+  lista.forEach(it => {
+    const k = (it.responsable || '').trim() || SIN;
+    if (!grupos.has(k)) grupos.set(k, []);
+    grupos.get(k).push(it);
+  });
+
+  const rango = (k) => k === yo ? 0 : k === 'Los dos' ? 2 : k === SIN ? 3 : 1;
+  const orden = [...grupos.keys()].sort((a, b) => rango(a) - rango(b) || a.localeCompare(b));
+
+  orden.forEach(k => {
+    const filas = grupos.get(k);
+    const color = colorPersona(k);
+
+    const cab = el('li', 'grupo' + (k === yo ? ' mio' : ''));
+    cab.style.setProperty('--per', color);
+    cab.appendChild(el('span', 'quien', k === yo ? `${k} — tú` : k));
+    cab.appendChild(el('span', 'cuenta', String(filas.length)));
+    ul.appendChild(cab);
+
+    filas.forEach(it => {
+      const li = fila(it, s);
+      li.classList.add('per');
+      li.style.setProperty('--per', color);
+      ul.appendChild(li);
+    });
   });
 }
 
@@ -395,7 +450,7 @@ function opcionesResp (select, valor) {
 function fila (it, s) {
   const li = el('li', 'it' + (it.section === 'completada' ? ' ok' : ''));
 
-  if (s.tipo === 'tarea' && s.completable) {
+  if (s.completable) {
     const b = el('button', 'box');
     b.type = 'button';
     b.innerHTML = svg(ICO.check);
@@ -423,7 +478,10 @@ function fila (it, s) {
     cont.appendChild(el('div', 'txt', it.texto));
 
     const pie = el('div', 'pie');
-    if (it.responsable) pie.appendChild(el('span', 'et resp', it.responsable));
+    if (it.responsable && !s.agrupa) pie.appendChild(el('span', 'et resp', it.responsable));
+    if (it.section === 'completada' && it.seccion_previa) {
+      pie.appendChild(el('span', 'et origen', ORIGEN[it.seccion_previa] || it.seccion_previa));
+    }
     pie.appendChild(el('span', 'et', nombreDe(it.autor_email) + ' · ' +
       relativa(it.section === 'completada' ? (it.completada_at || it.updated_at) : it.created_at)));
 
