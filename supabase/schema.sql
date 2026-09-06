@@ -96,6 +96,40 @@ create trigger items_touch
   for each row execute function public.touch_updated_at();
 
 -- ---------------------------------------------------------------------
+-- 3b. Bitácora de avances por tarea
+--     Para anotar "en qué va" sin tener que editar el texto de la tarea.
+--     Tabla hija en vez de columna jsonb: dos personas pueden anotar a la
+--     vez sin pisarse (con jsonb, el último update borra el del otro).
+-- ---------------------------------------------------------------------
+create table if not exists public.item_avances (
+  id          uuid primary key default gen_random_uuid(),
+  item_id     uuid not null references public.items(id) on delete cascade,
+  texto       text not null check (char_length(btrim(texto)) > 0),
+  autor_email text not null default public.current_email(),
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists item_avances_item_idx
+  on public.item_avances (item_id, created_at);
+
+alter table public.item_avances enable row level security;
+
+drop policy if exists avances_select on public.item_avances;
+drop policy if exists avances_insert on public.item_avances;
+drop policy if exists avances_update on public.item_avances;
+drop policy if exists avances_delete on public.item_avances;
+
+create policy avances_select on public.item_avances for select
+  to authenticated using (public.is_member());
+create policy avances_insert on public.item_avances for insert
+  to authenticated with check (public.is_member() and autor_email = public.current_email());
+create policy avances_update on public.item_avances for update
+  to authenticated using (public.is_member() and autor_email = public.current_email())
+  with check (public.is_member() and autor_email = public.current_email());
+create policy avances_delete on public.item_avances for delete
+  to authenticated using (public.is_member());
+
+-- ---------------------------------------------------------------------
 -- 4. Row Level Security — nadie fuera de la allowlist ve ni escribe nada
 -- ---------------------------------------------------------------------
 alter table public.items          enable row level security;
@@ -158,6 +192,10 @@ begin
   end;
   begin
     alter publication supabase_realtime add table public.allowed_emails;
+  exception when duplicate_object then null;
+  end;
+  begin
+    alter publication supabase_realtime add table public.item_avances;
   exception when duplicate_object then null;
   end;
 end $$;
